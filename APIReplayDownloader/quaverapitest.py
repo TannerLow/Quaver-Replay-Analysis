@@ -3,6 +3,7 @@ import json
 import time
 import os
 
+
 def main():
     userids = []
     userreplaydict = {}
@@ -32,4 +33,5 @@ def main():
         open(f"./replays/{user}/{replayid}.qr", "wb").write(replayfile.content)
 
 
-main()
+if __name__ == "__main__":
+    main()
