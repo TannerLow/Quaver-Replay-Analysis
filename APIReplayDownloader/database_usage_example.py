@@ -7,9 +7,9 @@ print(connection.root().items())
 
 sample_player = {
     "info": {
-        "id": 1,
+        "id": 383,
         "steam_id": "76561198162013525",
-        "username": "Swan",
+        "username": "yahweh",
         "time_registered": "2018-12-16T20:27:20.447Z",
         "allowed": 1,
         "privileges": 8191,
@@ -120,11 +120,13 @@ sample_entry = {
     }
 }
 
-print("Attempt to add player database:", database.insert_player(connection, sample_player))
-print("Attempt to add player database:", database.update_player(connection, sample_player))
+print("Attempt to add player   :", database.insert_player(connection, sample_player))
+print("Attempt to update player:", database.update_player(connection, sample_player))
 
-print("Attempt to add player database:", database.insert_leaderboard_entry(connection, sample_entry))
-print("Attempt to add player database:", database.update_leaderboard_entry(connection, sample_entry))
+print("Attempt to add leaderbaord entry   :", database.insert_leaderboard_entry(connection, sample_entry))
+print("Attempt to update leaderbaord entry:", database.update_leaderboard_entry(connection, sample_entry))
+
+print("Attempt to get player id by rank:", database.get_player_id_by_rank(connection, 1))
 
 connection.close()
 db.close()
