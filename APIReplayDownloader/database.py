@@ -21,7 +21,7 @@ def get_connection(db: DB):
     return db.open()
 
 
-def insert_player(player_db_connection, player: dict, is_subtransaction=False: bool) -> bool:
+def insert_player(player_db_connection, player: dict) -> bool:
     player_id = None
     try:
         player_id = player["info"]["id"]
@@ -33,14 +33,13 @@ def insert_player(player_db_connection, player: dict, is_subtransaction=False: b
 
         if not player_id in root.keys(): 
             root[player_id] = player
-            transaction.commit(is_subtransaction)
         else:
             return False
 
     return player_id != None
 
 
-def update_player(player_db_connection, player: dict, is_subtransaction=False: bool) -> bool:
+def update_player(player_db_connection, player: dict) -> bool:
     player_id = None
     try:
         player_id = player["info"]["id"]
@@ -52,7 +51,6 @@ def update_player(player_db_connection, player: dict, is_subtransaction=False: b
 
         if player_id in root.keys(): 
             root[player_id] = player
-            transaction.commit(is_subtransaction)
         else:
             return False
 
@@ -69,7 +67,7 @@ def get_player(player_db_connection, player_id: int) -> dict:
     return dict()
 
 
-def insert_leaderboard_entry(leaderboard_db_connection, entry: dict, is_subtransaction=False: bool) -> bool:
+def insert_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
     player_rank = None
     try:
         player_rank = entry["stats"]["rank"]
@@ -79,16 +77,15 @@ def insert_leaderboard_entry(leaderboard_db_connection, entry: dict, is_subtrans
     if player_rank != None:
         root = leaderboard_db_connection.root()
 
-        if not player_rank in root.keys(): 
+        if not player_rank in root.keys():
             root[player_rank] = entry
-            transaction.commit(is_subtransaction)
         else:
             return False
 
     return player_rank != None
 
 
-def update_leaderboard_entry(leaderboard_db_connection, entry: dict, is_subtransaction=False: bool) -> bool:
+def update_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
     player_rank = None
     try:
         player_rank = entry["stats"]["rank"]
@@ -100,7 +97,6 @@ def update_leaderboard_entry(leaderboard_db_connection, entry: dict, is_subtrans
 
         if player_rank in root.keys(): 
             root[player_rank] = entry
-            transaction.commit(is_subtransaction)
         else:
             return False
 
