@@ -39,7 +39,7 @@ def get_top_scores_by_user(user_id: int, keymode=2) -> list:  # keymode=1 is 4k,
 def download_replay(replay_id: int):
     replay = get(f"https://api.quavergame.com/d/web/replay/{replay_id}")
 
-    return replay if replay.content is not None else None  # no idea what happens when dl fails so i'll just return none
+    return replay.content
 
 
 def test():
