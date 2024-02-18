@@ -26,10 +26,9 @@ def insert_player(player_db_connection, player: dict) -> bool:
 
         if not player_id in root.keys(): 
             root[player_id] = player
+            transaction.commit()
         else:
             return False
-
-        transaction.commit()
 
     return player_id != None
 
@@ -46,12 +45,21 @@ def update_player(player_db_connection, player: dict) -> bool:
 
         if player_id in root.keys(): 
             root[player_id] = player
+            transaction.commit()
         else:
             return False
 
-        transaction.commit()
-
     return player_id != None
+
+
+def get_player(player_db_connection, player_id: int) -> dict:    
+    if player_id != None:
+        root = player_db_connection.root()
+
+        if player_id in root.keys():
+            return root[player_id]
+
+    return dict()
 
 
 def insert_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
@@ -66,10 +74,9 @@ def insert_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
 
         if not player_rank in root.keys(): 
             root[player_rank] = entry
+            transaction.commit()
         else:
             return False
-
-        transaction.commit()
 
     return player_rank != None
 
@@ -86,9 +93,28 @@ def update_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
 
         if player_rank in root.keys(): 
             root[player_rank] = entry
+            transaction.commit()
         else:
             return False
 
-        transaction.commit()
-
     return player_rank != None
+
+
+def get_leaderboard_entry(leaderboard_db_connection, rank: int) -> dict:    
+    if rank != None:
+        root = leaderbaord_db_connection.root()
+
+        if rank in root.keys():
+            return root[rank]
+
+    return dict()
+
+
+def get_player_id_by_rank(leaderboard_db_connection, rank: int) -> int:    
+    if rank != None:
+        root = leaderboard_db_connection.root()
+
+        if rank in root.keys():
+            return root[rank]["id"]
+
+    return -1
