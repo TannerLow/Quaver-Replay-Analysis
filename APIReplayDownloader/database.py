@@ -11,10 +11,19 @@ def open_db(main_file_name: str) -> DB:
 
 
 # The storage should be closed before calling pack()
-def pack_db(main_file_name: str):
-    storage = FileStorage.FileStorage(main_file_name)
+def pack_db(connection, db: DB):
+    # free resources
+    db_file_name = db.storage.getName()
+    connection.close()
+    db.close()
+    # pack the storage
+    storage = FileStorage.FileStorage(db_file_name)
     storage.pack(time.time(), serialize.referencesf)
     storage.close()
+    # reestablish database
+    new_db = open_db(db_file_name)
+    new_connection = get_connection(new_db)
+    return new_connection, new_db
 
 
 def get_connection(db: DB):
