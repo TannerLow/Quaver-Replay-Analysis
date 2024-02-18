@@ -1,5 +1,17 @@
+BTrees==5.2
 certifi==2024.2.2
+cffi==1.16.0
 charset-normalizer==3.3.2
 idna==3.6
+persistent==5.2
+pycparser==2.21
 requests==2.31.0
+setuptools==69.1.0
+six==1.16.0
+transaction==4.0
 urllib3==2.2.0
+zc.lockfile==3.0.post1
+ZConfig==4.0
+ZODB==5.8.1
+zodbpickle==3.2
+zope.interface==6.2
