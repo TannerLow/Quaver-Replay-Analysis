@@ -3,7 +3,7 @@ from playerdata import get_leaderboard_by_page
 from time import sleep
 
 
-db = database.open_db("db/testdb.fs")
+lb_db = database.open_db("db/leaderboard.fs")
 connection = database.get_connection(db)
 
 for i in range(0, 71):
@@ -13,4 +13,4 @@ for i in range(0, 71):
     sleep(1)
 
 connection.close()
-db.close()
+lb_db.close()
