@@ -1,6 +1,8 @@
+.vscode
 Quaver.API
 ReplayParser/obj
 ReplayParser/bin
 quaver-venv
 .idea
 APIReplayDownloader/quaver-venv
+APIReplayDownloader/db
