@@ -7,3 +7,5 @@ quaver-venv
 quaver-venv
 db
 __pycache__
+*.qua
+main.py
