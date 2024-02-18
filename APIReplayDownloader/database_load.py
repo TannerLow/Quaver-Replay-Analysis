@@ -1,5 +1,6 @@
 import database
 from playerdata import get_leaderboard_by_page
+from time import sleep
 
 
 db = database.open_db("db/testdb.fs")
@@ -10,3 +11,6 @@ for i in range(0, 71):
     for user in lb_page:
         print("Adding lb entry to database: ", database.insert_leaderboard_entry(connection, user))
     sleep(1)
+
+connection.close()
+db.close()
