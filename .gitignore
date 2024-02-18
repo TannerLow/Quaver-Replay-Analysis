@@ -4,5 +4,6 @@ ReplayParser/obj
 ReplayParser/bin
 quaver-venv
 .idea
-APIReplayDownloader/quaver-venv
-APIReplayDownloader/db
+quaver-venv
+db
+__pycache__

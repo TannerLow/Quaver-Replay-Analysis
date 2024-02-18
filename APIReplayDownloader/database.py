@@ -1,26 +1,94 @@
 from ZODB import FileStorage, DB
 import transaction
+import os
 
-# Open the database file storage
-storage = FileStorage.FileStorage('db/testdb.fs')
-db = DB(storage)
-connection = db.open()
-root = connection.root()
 
-# Example of deleting items
-for key in list(root.keys()):
-    del root[key]
-transaction.commit()
+def open_db(main_file_name: str) -> DB:
+    # if os.path.exists(main_file_name):
+    #     print("Its alive")
+    storage = FileStorage.FileStorage('db/testdb.fs')
+    db = DB(storage)
+    return db
 
-# Add an item to the root object
-root[175369] = {"name": "Atomic Ant", "rank": 1}
-root[393346] = {"name": "Butanic", "rank": 2}
-transaction.commit()
+def get_connection(db: DB):
+    return db.open()
 
-# Print out all items in the database
-for key, value in root.items():
-    print(f"Key: {key}, Value: {value}")
 
-# Close the database connection
-connection.close()
-db.close()
+def insert_player(player_db_connection, player: dict) -> bool:
+    player_id = None
+    try:
+        player_id = player["info"]["id"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if player_id != None:
+        root = player_db_connection.root()
+
+        if not player_id in root.keys(): 
+            root[player_id] = player
+        else:
+            return False
+
+        transaction.commit()
+
+    return player_id != None
+
+
+def update_player(player_db_connection, player: dict) -> bool:
+    player_id = None
+    try:
+        player_id = player["info"]["id"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if player_id != None:
+        root = player_db_connection.root()
+
+        if player_id in root.keys(): 
+            root[player_id] = player
+        else:
+            return False
+
+        transaction.commit()
+
+    return player_id != None
+
+
+def insert_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
+    player_rank = None
+    try:
+        player_rank = entry["stats"]["rank"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if player_rank != None:
+        root = leaderboard_db_connection.root()
+
+        if not player_rank in root.keys(): 
+            root[player_rank] = entry
+        else:
+            return False
+
+        transaction.commit()
+
+    return player_rank != None
+
+
+def update_leaderboard_entry(leaderboard_db_connection, entry: dict) -> bool:
+    player_rank = None
+    try:
+        player_rank = entry["stats"]["rank"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if player_rank != None:
+        root = leaderboard_db_connection.root()
+
+        if player_rank in root.keys(): 
+            root[player_rank] = entry
+        else:
+            return False
+
+        transaction.commit()
+
+    return player_rank != None
