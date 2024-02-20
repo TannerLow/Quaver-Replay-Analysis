@@ -130,3 +130,50 @@ def get_player_id_by_rank(leaderboard_db_connection, rank: int) -> int:
             return root[rank]["id"]
 
     return -1
+
+
+def insert_mapset(mapset_db_connection, mapset: dict) -> bool:
+    mapset_id = None
+    try:
+        mapset_id = mapset["id"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if mapset_id != None:
+        root = mapset_db_connection.root()
+
+        if not mapset_id in root.keys():
+            root[mapset_id] = mapset
+        else:
+            return False
+
+    return mapset_id != None
+
+
+def update_mapset(mapset_db_connection, mapset: dict) -> bool:
+    mapset_id = None
+    try:
+        mapset_id = mapset["id"]
+    except Exception as e:
+        print("[ERROR]", e)
+    
+    if mapset_id != None:
+        root = mapset_db_connection.root()
+
+        if mapset_id in root.keys(): 
+            root[mapset_id] = mapset
+        else:
+            return False
+
+    return mapset_id != None
+
+
+def get_mapset(mapset_db_connection, mapset_id: int) -> dict:    
+    if mapset_id != None:
+        root = mapset_db_connection.root()
+
+        if mapset_id in root.keys():
+            return root[mapset_id]
+
+    return dict()
+
