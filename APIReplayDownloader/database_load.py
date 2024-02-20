@@ -16,10 +16,11 @@ for i in range(1, 50):  # for all ranks in the 4k leaderboard db
     player_id = database.get_player_id_by_rank(leaderboard_4k_connection, i)
 
     if player_id != -1:
-        if not database.get_player(player_connection, player_id) == dict():
+        if database.get_player(player_connection, player_id) != {}:
+            print(f"Player (id {player_id}) already in database. Skipping...")
             continue
         player_profile = get_user_by_id(player_id, 1)  # 1 means 4k
-        if player_profile is not []:
+        if player_profile:
             transaction.begin()
             print(f"Adding {player_profile['info']['username']} (id {player_id}) to database:",
                   database.insert_player(player_connection, player_profile))
@@ -44,16 +45,16 @@ print("Adding players from 7k leaderboard to database...")
 
 num = 0
 skips = 0
-for i in range(1, 50):  # for all ranks in the 7k leaderboard db
+for i in range(50, 100):  # for all ranks in the 7k leaderboard db
     player_id = database.get_player_id_by_rank(leaderboard_7k_connection, i)
 
     if player_id != -1:
-        if database.get_player(player_connection, player_id) is not dict():
+        if database.get_player(player_connection, player_id) != {}:
             print(f"Player (id {player_id}) already in database. Skipping...")
             skips += 1
             continue
         player_profile = get_user_by_id(player_id)
-        if player_profile is not []:
+        if player_profile:
             transaction.begin()
             print(f"Adding {player_profile['info']['username']} (id {player_id}) to database:",
                   database.insert_player(player_connection, player_profile))
