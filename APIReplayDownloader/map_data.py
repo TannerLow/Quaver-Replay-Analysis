@@ -5,10 +5,6 @@ import database
 import transaction
 
 
-# cooldown = 3
-# map_directory = "maps"
-
-
 def gather_ranked_mapsets():
     db = database.open_db("db/ranked_mapsets.fs")
     connection = database.get_connection(db)
@@ -51,37 +47,52 @@ def gather_ranked_mapsets():
 
 
 
-# def gather_maps(map_ids):
-#     all_ranked_mapset_ids = quaver_api.get_ranked_map_ids()
+def gather_maps(map_ids):
+    cooldown = 3
+    map_directory = "maps"
 
-#     total = len(all_ranked_map_ids)
-#     if total != 0:
-#         print(f"Acquiring {total} ranked maps.")
+    total = len(map_ids)
+    if total != 0:
+        print(f"Acquiring {total} map files.")
 
-#         if not os.path.exists(map_directory):
-#             os.makedirs(map_directory)
+        if not os.path.exists(map_directory):
+            os.makedirs(map_directory)
 
-#         for index, map_id in enumerate(all_ranked_map_ids):
-#             if index % 50 == 0:
-#                 print(f"Progress: {index}/{total}")
+        for index, map_id in enumerate(map_ids):
+            if index % 50 == 0:
+                print(f"Progress: {index}/{total}")
 
-#             filename = str(map_id) + ".qua"
-#             filename = os.path.join(map_directory, filename)
+            filename = str(map_id) + ".qua"
+            filename = os.path.join(map_directory, filename)
             
-#             map_content = None
-#             if not os.path.exists(filename):
-#                 map_content = quaver_api.get_map_file(map_id)
+            map_content = None
+            if not os.path.exists(filename):
+                map_content = quaver_api.get_map_file(map_id)
 
-#             if map_content != None:
-#                 with open(filename, "wb") as file:
-#                     file.write(map_content)
+            if map_content != None:
+                with open(filename, "wb") as file:
+                    file.write(map_content)
 
-#             time.sleep(cooldown)
+            time.sleep(cooldown)
         
-#         print("Done gathering maps")
+        print("Done gathering maps")
                 
 
 
 
 if __name__ == "__main__":
     gather_ranked_mapsets()
+
+    db = database.open_db("db/ranked_mapsets.fs")
+    connection = database.get_connection(db)
+
+    map_ids = set()
+    root = connection.root()
+    for key in root.keys():
+        for map_obj in root[key]["maps"]:
+            map_ids.add(map_obj)
+
+    connection.close()
+    db.close()
+
+    gather_maps(map_ids)
