@@ -1,37 +1,82 @@
 import quaver_api
 import time
 import os
+import database
 
 
-cooldown = 3
-map_directory = "maps"
+# cooldown = 3
+# map_directory = "maps"
 
-def gather_maps():
-    all_ranked_map_ids = quaver_api.get_ranked_map_ids()
 
-    total = len(all_ranked_map_ids)
+def gather_ranked_mapsets():
+    db = database.open_db("db/ranked_mapsets.fs")
+    connection = database.get_connection(db)
+
+    all_ranked_mapset_ids = quaver_api.get_ranked_map_ids()
+
+    cooldown = 1
+    total = len(all_ranked_mapset_ids)
     if total != 0:
-        print(f"Acquiring {total} ranked maps.")
+        print(f"Acquiring {total} ranked mapsets.")
 
-        if not os.path.exists(map_directory):
-            os.makedirs(map_directory)
-
-        for index, map_id in enumerate(all_ranked_map_ids):
+        # for each mapset_id get the mapset and insert into database
+        for index, mapset_id in enumerate(all_ranked_mapset_ids):
             if index % 50 == 0:
                 print(f"Progress: {index}/{total}")
-            map_content = quaver_api.get_map_file(map_id)
+                print("Packing database...")
+                connection, db = database.pack_db(connection, db)
 
-            if map_content != None:
-                filename = str(map_id) + ".qua"
-                filename = os.path.join(map_directory, filename)
-                with open(filename, "wb") as file:
-                    file.write(map_content)
+            mapset = quaver_api.get_mapset(mapset_id)
+            if mapset != None:
+                transaction.begin()
+                status = database.insert_mapset(connection, mapset)
+                print(f"Getting mapset {mapset_id}: {status}")
+                if status == True:
+                    transaction.commit()
+                else:
+                    transaction.abort()
 
             time.sleep(cooldown)
         
-        print("Done gathering maps")
+        print("Done gathering mapsets")
+
+    connection, db = database.pack_db(connection, db)
+    connection.close()
+    db.close()
+
+
+
+# def gather_maps(map_ids):
+#     all_ranked_mapset_ids = quaver_api.get_ranked_map_ids()
+
+#     total = len(all_ranked_map_ids)
+#     if total != 0:
+#         print(f"Acquiring {total} ranked maps.")
+
+#         if not os.path.exists(map_directory):
+#             os.makedirs(map_directory)
+
+#         for index, map_id in enumerate(all_ranked_map_ids):
+#             if index % 50 == 0:
+#                 print(f"Progress: {index}/{total}")
+
+#             filename = str(map_id) + ".qua"
+#             filename = os.path.join(map_directory, filename)
+            
+#             map_content = None
+#             if not os.path.exists(filename):
+#                 map_content = quaver_api.get_map_file(map_id)
+
+#             if map_content != None:
+#                 with open(filename, "wb") as file:
+#                     file.write(map_content)
+
+#             time.sleep(cooldown)
+        
+#         print("Done gathering maps")
                 
 
 
+
 if __name__ == "__main__":
-    gather_maps()
+    gather_ranked_mapsets()
