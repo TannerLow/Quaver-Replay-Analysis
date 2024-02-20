@@ -2,6 +2,7 @@ import quaver_api
 import time
 import os
 import database
+import transaction
 
 
 # cooldown = 3
@@ -12,7 +13,7 @@ def gather_ranked_mapsets():
     db = database.open_db("db/ranked_mapsets.fs")
     connection = database.get_connection(db)
 
-    all_ranked_mapset_ids = quaver_api.get_ranked_map_ids()
+    all_ranked_mapset_ids = quaver_api.get_ranked_mapset_ids()
 
     cooldown = 1
     total = len(all_ranked_mapset_ids)
@@ -26,7 +27,11 @@ def gather_ranked_mapsets():
                 print("Packing database...")
                 connection, db = database.pack_db(connection, db)
 
-            mapset = quaver_api.get_mapset(mapset_id)
+            root = connection.root()
+            mapset = None
+            if not mapset_id in root.keys():
+                mapset = quaver_api.get_mapset(mapset_id)
+
             if mapset != None:
                 transaction.begin()
                 status = database.insert_mapset(connection, mapset)
@@ -35,8 +40,8 @@ def gather_ranked_mapsets():
                     transaction.commit()
                 else:
                     transaction.abort()
-
-            time.sleep(cooldown)
+            
+                 time.sleep(cooldown)
         
         print("Done gathering mapsets")
 
