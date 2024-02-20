@@ -1,27 +1,77 @@
 import database
 import transaction
-from playerdata import get_leaderboard_by_page
+from playerdata import get_user_by_id
 from time import sleep
 
+leaderboard_4k_db = database.open_db("db/leaderboard_4k.fs")
+leaderboard_4k_connection = database.get_connection(leaderboard_4k_db)
 
-db = database.open_db("db/leaderboard_4k.fs")
-connection = database.get_connection(db)
+player_db = database.open_db("db/players.fs")
+player_connection = database.get_connection(player_db)
+
+print("Adding players from 4k leaderboard to database...")
 
 num = 0
-for i in range(0, 1):
-    lb_page = get_leaderboard_by_page(i, 1)  # 1 means 4k
-    transaction.begin()
-    for user in lb_page:
-        print(f"Adding entry #{num} to 4k leaderboard:", database.insert_leaderboard_entry(connection, user))
-        num += 1
-    transaction.commit()
-    if num >= 1250:  # pack every 25 pages
-        connection, db = database.pack_db(connection, db)
-        print("Packing db...")
-        num = 0
-    sleep(2)
+for i in range(1, 50):  # for all ranks in the 4k leaderboard db
+    player_id = database.get_player_id_by_rank(leaderboard_4k_connection, i)
 
-connection, db = database.pack_db(connection, db)  # extra time at the end to make sure
+    if player_id != -1:
+        if not database.get_player(player_connection, player_id) == dict():
+            continue
+        player_profile = get_user_by_id(player_id, 1)  # 1 means 4k
+        if player_profile is not []:
+            transaction.begin()
+            print(f"Adding {player_profile['info']['username']} (id {player_id}) to database:",
+                  database.insert_player(player_connection, player_profile))
+            transaction.commit()
+            num += 1
+            if num % 500 == 0:
+                print(f"Packing db... {num / 10050}% complete")
+                player_connection, player_db = database.pack_db(player_connection, player_db)
+        sleep(1)
 
-connection.close()
-db.close()
+print("Final pack...")
+player_connection, player_db = database.pack_db(player_connection, player_db)
+print("Done!")
+
+leaderboard_4k_connection.close()
+leaderboard_4k_db.close()
+
+leaderboard_7k_db = database.open_db("db/testdb.fs")
+leaderboard_7k_connection = database.get_connection(leaderboard_7k_db)
+
+print("Adding players from 7k leaderboard to database...")
+
+num = 0
+skips = 0
+for i in range(1, 50):  # for all ranks in the 7k leaderboard db
+    player_id = database.get_player_id_by_rank(leaderboard_7k_connection, i)
+
+    if player_id != -1:
+        if database.get_player(player_connection, player_id) is not dict():
+            print(f"Player (id {player_id}) already in database. Skipping...")
+            skips += 1
+            continue
+        player_profile = get_user_by_id(player_id)
+        if player_profile is not []:
+            transaction.begin()
+            print(f"Adding {player_profile['info']['username']} (id {player_id}) to database:",
+                  database.insert_player(player_connection, player_profile))
+            transaction.commit()
+            num += 1
+            if num % 500 == 0:
+                print(f"Packing db... {num / 3550}% complete")
+                player_connection, player_db = database.pack_db(player_connection, player_db)
+        sleep(1)
+
+print("Final pack...")
+player_connection, player_db = database.pack_db(player_connection, player_db)
+print("Done!")
+
+print(f"{skips} 7k players are also in the 4k player database")
+
+leaderboard_7k_connection.close()
+leaderboard_7k_db.close()
+
+player_connection.close()
+player_db.close()
