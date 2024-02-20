@@ -12,7 +12,7 @@ player_connection = database.get_connection(player_db)
 print("Adding players from 4k leaderboard to database...")
 
 num = 0
-for i in range(1, 100):  # for all ranks in the 4k leaderboard db
+for i in range(1, 10050):  # for all ranks in the 4k leaderboard db
     player_id = database.get_player_id_by_rank(leaderboard_4k_connection, i)
 
     if player_id != -1:
@@ -44,7 +44,7 @@ leaderboard_7k_connection = database.get_connection(leaderboard_7k_db)
 print("Adding players from 7k leaderboard to database...")
 
 num = 0
-for i in range(1, 100):  # for all ranks in the 7k leaderboard db
+for i in range(1, 3550):  # for all ranks in the 7k leaderboard db
     player_id = database.get_player_id_by_rank(leaderboard_7k_connection, i)
 
     if player_id != -1:
