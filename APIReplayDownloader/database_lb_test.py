@@ -1,10 +1,10 @@
 import database
 
-lb_db = database.open_db("db/leaderboard.fs")
+db = database.open_db("db/players.fs")
 connection = database.get_connection(db)
 
-id = database.get_player_id_by_rank(connection, 90)
-print(id)
+player = database.get_player(connection, 175369)
+print(player)
 
 connection.close()
-lb_db.close()
+db.close()

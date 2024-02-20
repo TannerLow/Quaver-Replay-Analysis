@@ -44,14 +44,12 @@ leaderboard_7k_connection = database.get_connection(leaderboard_7k_db)
 print("Adding players from 7k leaderboard to database...")
 
 num = 0
-skips = 0
 for i in range(50, 100):  # for all ranks in the 7k leaderboard db
     player_id = database.get_player_id_by_rank(leaderboard_7k_connection, i)
 
     if player_id != -1:
         if database.get_player(player_connection, player_id) != {}:
             print(f"Player (id {player_id}) already in database. Skipping...")
-            skips += 1
             continue
         player_profile = get_user_by_id(player_id)
         if player_profile:
@@ -68,8 +66,6 @@ for i in range(50, 100):  # for all ranks in the 7k leaderboard db
 print("Final pack...")
 player_connection, player_db = database.pack_db(player_connection, player_db)
 print("Done!")
-
-print(f"{skips} 7k players are also in the 4k player database")
 
 leaderboard_7k_connection.close()
 leaderboard_7k_db.close()
