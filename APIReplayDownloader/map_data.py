@@ -37,7 +37,7 @@ def gather_ranked_mapsets():
                 else:
                     transaction.abort()
             
-                 time.sleep(cooldown)
+                time.sleep(cooldown)
         
         print("Done gathering mapsets")
 
@@ -72,8 +72,9 @@ def gather_maps(map_ids):
             if map_content != None:
                 with open(filename, "wb") as file:
                     file.write(map_content)
-
-            time.sleep(cooldown)
+                    print("Map retrieved:", map_id)
+                
+                time.sleep(cooldown)
         
         print("Done gathering maps")
                 
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     root = connection.root()
     for key in root.keys():
         for map_obj in root[key]["maps"]:
-            map_ids.add(map_obj)
+            map_ids.add(map_obj["id"])
 
     connection.close()
     db.close()
