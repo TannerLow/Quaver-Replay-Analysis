@@ -1,4 +1,4 @@
-from requests import get
+from requests import get, exceptions
 from json import loads
 from time import sleep
 
@@ -15,7 +15,11 @@ def get_leaderboard_by_page(page: int, keymode=2) -> list:  # keymode=1 is 4k, k
 
 
 def get_user_by_id(user_id: int, keymode=2) -> dict:  # keymode=1 is 4k, keymode=2 is 7k (default)
-    user = get(f"https://api.quavergame.com/v1/users/full/{user_id}")
+    try:
+        user = get(f"https://api.quavergame.com/v1/users/full/{user_id}")
+    except exceptions.Timeout:
+        print(f"Timed out, skipping id ({user_id})")
+        return {}
 
     json_user = loads(user.text)
 

@@ -14,3 +14,6 @@ print(player)
 
 connection.close()
 db.close()
+
+aconnection.close()
+adb.close()
