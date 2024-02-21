@@ -9,5 +9,4 @@ db
 __pycache__
 *.qua
 main.py
-database_lb_test.py
 database_4k_lb_test.py
