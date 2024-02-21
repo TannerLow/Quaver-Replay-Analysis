@@ -38,6 +38,8 @@ for rank in root.keys():  # for all ranks on the 4k leaderboard
         print(f"Adding {player_profile['info']['username']} (id {player_id}) to database:",
               database.insert_player(player_connection, player_profile))
 
+        num_profiles_added += 1
+
         if num_profiles_added % 25 == 0:
             transaction.commit()
             transaction.begin()
@@ -45,8 +47,6 @@ for rank in root.keys():  # for all ranks on the 4k leaderboard
         if num_profiles_added % 250 == 0:
             print(f"Packing db... {num_profiles_added / num_players}% complete")
             player_connection, player_db = database.pack_db(player_connection, player_db)
-
-        num_profiles_added += 1
 
 transaction.commit()
 
