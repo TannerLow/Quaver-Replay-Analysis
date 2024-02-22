@@ -29,15 +29,26 @@ def get_user_by_id(user_id: int, keymode=2) -> dict:  # keymode=1 is 4k, keymode
         return {}
 
 
-def get_top_scores_by_user(user_id: int, keymode=2) -> list:  # keymode=1 is 4k, keymode=2 is 7k (default)
-    top_scores = get(f"https://api.quavergame.com/v1/users/scores/best?id={user_id}&mode={keymode}")
+def get_top_scores_by_user(user_id: int, keymode=2, num_pages=1) -> list:  # keymode=1 is 4k, keymode=2 is 7k (default)
+    scores = []
+    for page in range(num_pages):
+        try:
+            top_scores = get(f"https://api.quavergame.com/v1/users/scores/best?id={user_id}&mode={keymode}&page={page}")
+            sleep(1)
+        except exceptions.Timeout:
+            print(f"Timed out, skipping page {page} of {num_pages} for id ({user_id})")
+            continue
 
-    json_top_scores = loads(top_scores.text)
+        json_scores = loads(top_scores.text)
 
-    if json_top_scores["status"] == 200:
-        return json_top_scores["scores"]
-    else:
-        return []
+        if json_scores["status"] == 200:
+            scores.extend(json_scores["scores"])
+
+        if json_scores["status"] == 404:
+            print(f"User does not have enough top scores set. Stopping...")
+            return scores
+
+    return scores
 
 
 def download_replay(replay_id: int):

@@ -130,3 +130,26 @@ def get_player_id_by_rank(leaderboard_db_connection, rank: int) -> int:
             return root[rank]["id"]
 
     return -1
+
+
+def insert_scores(score_db_connection, player_id: int, scores: list) -> bool:
+    # have to pass in player id due to scores not containing them
+    if player_id != None:
+        root = score_db_connection.root()
+
+        if not player_id in root.keys():
+            root[player_id] = scores
+        else:
+            return False
+
+    return player_id != None
+
+
+def get_scores_by_id(score_db_connection, player_id: int) -> list:
+    if player_id != None:
+        root = score_db_connection.root()
+
+        if player_id in root.keys():
+            return root[player_id]
+
+    return []
