@@ -33,7 +33,7 @@ def get_top_scores_by_user(user_id: int, keymode=2, num_pages=1) -> list:  # key
     scores = []
     for page in range(num_pages):
         try:
-            top_scores = get(f"https://api.quavergame.com/v1/users/scores/best?id={user_id}&mode={keymode}&page={page}")
+            top_scores = get(f"https://api.quavergame.com/v1/users/scores/best?id={user_id}&mode={keymode}&page={page}", 5)
             sleep(1)
         except exceptions.Timeout:
             print(f"Timed out, skipping page {page} of {num_pages} for id ({user_id})")
