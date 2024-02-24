@@ -7,7 +7,7 @@ def get_scores(num_pages=1):
     player_4k_db = database.open_db("db/leaderboard_4k.fs")
     player_4k_connection = database.get_connection(player_4k_db)
 
-    player_7k_db = database.open_db("db/leaderboard_7k.fs")
+    player_7k_db = database.open_db("db/testdb.fs")
     player_7k_connection = database.get_connection(player_7k_db)
 
     scores_4k_db = database.open_db("db/scores_4k.fs")
@@ -68,6 +68,8 @@ def get_scores(num_pages=1):
 
     player_4k_connection.close()
     player_4k_db.close()
+
+    print("Getting all scores from players in 7k database")
 
     root_7k = player_7k_connection.root()
 
