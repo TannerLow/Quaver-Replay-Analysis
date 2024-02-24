@@ -53,7 +53,7 @@ def get_top_scores_by_user(user_id: int, keymode=2, num_pages=1) -> list:  # key
 
 def download_replay(replay_id: int, sleep_time=1):
     try:
-        replay = get(f"https://api.quavergame.com/d/web/replay/{replay_id}", 5)
+        replay = get(f"https://api.quavergame.com/d/web/replay/{replay_id}", timeout=5)
         sleep(sleep_time)
     except exceptions.Timeout:
         print(f"Getting replay id ({replay_id}) timed out, skipping...")
