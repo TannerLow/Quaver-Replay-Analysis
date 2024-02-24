@@ -4,7 +4,7 @@ import os
 
 
 def download_all_replays(lb_connection, scores_connection):
-    root = leaderboard_connection.root()
+    root = lb_connection.root()
 
     for rank in root.keys():
         print(f"Downloading replays for {root[rank]['username']} (id {root[rank]['id']})")
