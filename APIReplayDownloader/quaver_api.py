@@ -14,7 +14,12 @@ def get_ranked_mapset_ids():
 
 
 def get_mapset(mapset_id):
-    response = get(f"https://api.quavergame.com/v1/mapsets/{mapset_id}")
+    response = None
+    try:
+        response = get(f"https://api.quavergame.com/v1/mapsets/{mapset_id}", timeout=5)
+    except exceptions.Timeout:
+        print(f"Timed out. Skipping mapset({mapset_id})...")
+        return []
 
     json_response = loads(response.text)
 
