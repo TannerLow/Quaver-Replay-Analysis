@@ -67,3 +67,33 @@ def download_replays_by_id(lb_connection, scores_connection, player_id):
 
     if scores:
         download_replays(scores, player_id)
+
+
+if __name__ == "__main__":
+    player_4k_db = database.open_db("db/leaderboard_4k.fs")
+    player_4k_connection = database.get_connection(player_4k_db)
+
+    scores_4k_db = database.open_db("db/scores_4k.fs")
+    scores_4k_connection = database.get_connection(scores_4k_db)
+
+    download_all_replays(player_4k_connection, scores_4k_connection)
+
+    scores_4k_connection.close()
+    scores_4k_db.close()
+
+    player_4k_connection.close()
+    player_4k_db.close()
+
+    player_7k_db = database.open_db("db/testdb.fs")
+    player_7k_connection = database.get_connection(player_7k_db)
+
+    scores_7k_db = database.open_db("db/scores_7k.fs")
+    scores_7k_connection = database.get_connection(scores_7k_db)
+
+    download_all_replays(player_7k_connection, scores_7k_connection)
+
+    scores_7k_connection.close()
+    scores_7k_db.close()
+
+    player_7k_connection.close()
+    player_7k_db.close()
