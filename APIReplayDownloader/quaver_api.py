@@ -2,13 +2,29 @@ from requests import get, exceptions
 from json import loads
 
 
-def get_ranked_map_ids():
+def get_ranked_mapset_ids():
     response = get("https://api.quavergame.com/v1/mapsets/ranked")
 
     json_response = loads(response.text)
 
     if json_response["status"] == 200:
         return json_response["mapsets"]
+    else:
+        return []
+
+
+def get_mapset(mapset_id):
+    response = None
+    try:
+        response = get(f"https://api.quavergame.com/v1/mapsets/{mapset_id}", timeout=5)
+    except exceptions.Timeout:
+        print(f"Timed out. Skipping mapset({mapset_id})...")
+        return []
+
+    json_response = loads(response.text)
+
+    if json_response["status"] == 200:
+        return json_response["mapset"]
     else:
         return []
 
