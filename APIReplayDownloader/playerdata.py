@@ -56,9 +56,12 @@ def download_replay(replay_id: int, sleep_time=1):
         replay = get(f"https://api.quavergame.com/d/web/replay/{replay_id}", timeout=5)
         sleep(sleep_time)
     except exceptions.Timeout:
-        print(f"Getting replay id ({replay_id}) timed out, skipping...")
+        print(f"[WARN] Getting replay id ({replay_id}) timed out, skipping...")
         return None
-
+    except Exception as e:
+        print("[ERROR] Getting replay id ({replay_id}), encountered error:", e)
+        print(e.message)
+        return None
     return replay.content
 
 

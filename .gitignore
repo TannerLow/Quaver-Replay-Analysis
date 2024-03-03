@@ -11,3 +11,5 @@ __pycache__
 main.py
 database_lb_test.py
 database_4k_lb_test.py
+replays
+bg_output*

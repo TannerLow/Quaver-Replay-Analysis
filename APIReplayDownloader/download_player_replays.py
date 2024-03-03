@@ -29,8 +29,9 @@ def download_replays(scores, player_id):
         if replay:
             if not os.path.exists(map_directory):
                 os.mkdir(map_directory)
-            open(f"{map_directory}/{filename}", "wb").write(replay)
-            print(f"Downloaded replay id ({replay_id}) for {keymode} map {score['map']['title']}")
+            with open(f"{map_directory}/{filename}", "wb") as file:
+                file.write(replay)
+                print(f"Downloaded replay id ({replay_id}) for {keymode} map {score['map']['title']}")
         else:
             continue
 
